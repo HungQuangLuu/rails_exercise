@@ -10,9 +10,9 @@ class TasksController < ApplicationController
     
     @task = Task.new(task_params)
     if @task.save
-      render plain: "success"  
+      render json: { status: "success", task: @task }, status: :created
     else
-      render plain: "fail"
+      render json: { status: "fail", errors: @task.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -21,18 +21,18 @@ class TasksController < ApplicationController
     @task = Task.find(params[:id])
 
     if @task.update(task_params)
-      render plain: "sucess"
+      render json: { status: 'success', task: @task }, status: :ok
     else
-      render plain: "fail"
+      render json: { status: 'fail', errors: @task.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def destroy
     @task = Task.find(params[:id])
     if @task.destroy
-      render plain: "sucess"
+      render json: { status: 'success' }, status: :no_content
     else
-      render plain: "fail"
+      render json: { status: 'fail' }, status: :internal_server_error
     end
   end
 
